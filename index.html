@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De las profundidades oceánicas a la neuroprotección</title>
+<meta name="description" content="Proyecto científico — Colegio Andino Montessori, I° Medio, 2026. Chaperonas químicas de la zona hadal y su relación con enfermedades neurodegenerativas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Space+Mono:wght@400;700&family=Inter:wght@400;500;600;700&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20,400,0,0&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* --- paleta original (mantenida) --- */
+    --abyss-0:#03050a;
+    --abyss-1:#070d1a;
+    --abyss-2:#0c1730;
+    --depth-line:#1b2c4d;
+    --bio-teal:#3fe8c9;
+    --bio-teal-dim:#1f6b5d;
+    --neural-violet:#b39dff;
+    --neural-violet-dim:#4a3d80;
+    --ink:#e7ecf3;
+    --ink-dim:#93a1b8;
+    --ink-faint:#5b6a85;
+    --alz:#ff8a7a;
+    --park:#ffc978;
+    --ela:#7ab8ff;
+    --serif:'Fraunces', serif;
+    --mono:'Space Mono', monospace;
+    --sans:'Inter', sans-serif;
+
+    /* --- tokens Material (superficies con "elevación" = superficie más clara, como Material 3 dark) --- */
+    --surf-0:#0a1224;
+    --surf-1:#0e1830;
+    --surf-2:#12203c;
+    --surf-3:#172848;
+    --on-surf:var(--ink);
+    --on-surf-var:var(--ink-dim);
+    --outline:var(--depth-line);
+    --outline-soft:rgba(148,168,201,0.12);
+    --primary:var(--bio-teal);
+    --primary-container:rgba(63,232,201,0.14);
+    --secondary:var(--neural-violet);
+    --secondary-container:rgba(179,157,255,0.14);
+    --radius-s:8px;
+    --radius-m:14px;
+    --radius-l:20px;
+    --appbar-h:64px;
+    --drawer-w:284px;
+    --e1:0 1px 2px rgba(0,0,0,.45), 0 1px 3px 1px rgba(0,0,0,.25);
+    --e2:0 2px 4px rgba(0,0,0,.45), 0 3px 10px 1px rgba(0,0,0,.3);
+    --e3:0 4px 10px rgba(0,0,0,.5), 0 2px 4px rgba(0,0,0,.35);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--surf-0);
+    color:var(--on-surf);
+    font-family:var(--sans);
+    overflow-x:hidden;
+  }
+  ::selection{background:var(--bio-teal-dim);color:var(--ink);}
+  a{color:inherit;}
+
+  .material-symbols-outlined{
+    font-variation-settings:'FILL' 0,'wght' 400,'GRAD' 0,'opsz' 20;
+    font-size:20px; line-height:1; user-select:none; display:inline-block;
+    vertical-align:middle;
+  }
+
+  /* Ambient background (heredado, más sutil) */
+  .ocean-bg{
+    position:fixed; inset:0; z-index:-2;
+    background:
+      radial-gradient(ellipse 80% 50% at 50% -10%, rgba(63,232,201,0.07), transparent 60%),
+      linear-gradient(180deg, var(--surf-0) 0%, var(--abyss-1) 45%, var(--abyss-2) 100%);
+  }
+  .particles{position:fixed; inset:0; z-index:-1; pointer-events:none;}
+  .particle{
+    position:absolute; width:2px; height:2px; border-radius:50%;
+    background:var(--bio-teal); opacity:0.28; filter:blur(0.5px);
+    animation:drift linear infinite;
+  }
+  @keyframes drift{ from{transform:translateY(0);} to{transform:translateY(-120vh);} }
+  @keyframes pulse{0%,100%{opacity:.3;}50%{opacity:1;}}
+
+  ::-webkit-scrollbar{width:8px; height:8px;}
+  ::-webkit-scrollbar-track{background:transparent;}
+  ::-webkit-scrollbar-thumb{background:var(--outline); border-radius:4px;}
+
+  /* ======================================================
+     APP SHELL — grid al estilo Gmail: appbar + drawer + content
+  ====================================================== */
+  .app-shell{
+    display:grid;
+    grid-template-columns:var(--drawer-w) 1fr;
+    grid-template-rows:var(--appbar-h) auto;
+    grid-template-areas:"appbar appbar" "drawer content";
+    min-height:100vh;
+  }
+  @media (max-width:960px){
+    .app-shell{grid-template-columns:1fr; grid-template-areas:"appbar" "content";}
+  }
+
+  /* ---------- App bar ---------- */
+  .appbar{
+    grid-area:appbar; position:sticky; top:0; z-index:200;
+    display:flex; align-items:center; gap:14px;
+    padding:0 20px;
+    background:rgba(10,18,36,0.86);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--outline-soft);
+  }
+  .appbar.scrolled{box-shadow:var(--e2);}
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:40px; height:40px; border-radius:50%; border:none; background:transparent;
+    color:var(--on-surf-var); cursor:pointer; position:relative; overflow:hidden;
+    transition:background .2s ease, color .2s ease;
+  }
+  .icon-btn:hover{background:var(--outline-soft); color:var(--on-surf);}
+  .menu-toggle{display:none;}
+  @media (max-width:960px){ .menu-toggle{display:inline-flex;} }
+
+  .appbar .brandmark{
+    display:flex; align-items:center; gap:10px; flex-shrink:0;
+  }
+  .brandmark .glyph{
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg, var(--bio-teal), var(--neural-violet));
+    display:flex; align-items:center; justify-content:center;
+    color:var(--surf-0); font-family:var(--mono); font-weight:700; font-size:13px;
+  }
+  .brandmark .txt{display:flex; flex-direction:column; line-height:1.15;}
+  .brandmark .txt .t1{font-family:var(--sans); font-size:14px; font-weight:600; color:var(--ink);}
+  .brandmark .txt .t2{font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:.03em;}
+  @media (max-width:640px){ .brandmark .txt{display:none;} }
+
+  .search-field{
+    flex:1; max-width:640px; margin:0 auto;
+    display:flex; align-items:center; gap:10px;
+    background:var(--surf-2); border:1px solid transparent;
+    border-radius:28px; padding:0 18px; height:44px;
+    color:var(--ink-faint); transition:background .2s ease, border-color .2s ease;
+  }
+  .search-field:focus-within{background:var(--surf-3); border-color:var(--bio-teal-dim);}
+  .search-field input{
+    flex:1; background:transparent; border:none; outline:none;
+    color:var(--ink); font-family:var(--sans); font-size:14px;
+  }
+  .search-field input::placeholder{color:var(--ink-faint);}
+  .search-field .icon-btn{width:30px;height:30px;}
+
+  .appbar-right{display:flex; align-items:center; gap:6px; margin-left:auto; flex-shrink:0;}
+  .avatar-group{display:flex; margin-left:6px;}
+  .avatar{
+    width:32px; height:32px; border-radius:50%; margin-left:-8px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--sans); font-size:12px; font-weight:700; color:var(--surf-0);
+    border:2px solid var(--surf-0); cursor:default;
+  }
+  .avatar:nth-child(1){background:var(--bio-teal);}
+  .avatar:nth-child(2){background:var(--neural-violet);}
+  .avatar:nth-child(3){background:var(--ela);}
+
+  /* ---------- Drawer (nav estilo etiquetas de Gmail) ---------- */
+  .drawer{
+    grid-area:drawer; position:sticky; top:var(--appbar-h);
+    height:calc(100vh - var(--appbar-h));
+    overflow-y:auto; padding:16px 12px 24px;
+    display:flex; flex-direction:column; gap:4px;
+  }
+  @media (max-width:960px){
+    .drawer{
+      position:fixed; top:var(--appbar-h); left:0; height:calc(100vh - var(--appbar-h));
+      width:280px; background:var(--surf-1); z-index:190;
+      transform:translateX(-100%); transition:transform .28s ease;
+      box-shadow:var(--e3); border-right:1px solid var(--outline-soft);
+    }
+    .drawer.open{transform:translateX(0);}
+  }
+  .drawer-backdrop{
+    display:none; position:fixed; inset:var(--appbar-h) 0 0 0; z-index:180;
+    background:rgba(0,0,0,0.5); backdrop-filter:blur(1px);
+  }
+  .drawer-backdrop.show{display:block;}
+
+  .compose-btn{
+    display:flex; align-items:center; gap:12px;
+    background:var(--primary-container); color:var(--bio-teal);
+    border:1px solid var(--bio-teal-dim);
+    border-radius:var(--radius-l); padding:13px 20px; margin:6px 4px 18px;
+    font-family:var(--sans); font-weight:600; font-size:13.5px;
+    cursor:pointer; box-shadow:var(--e1); transition:box-shadow .2s ease, background .2s ease;
+    position:relative; overflow:hidden;
+  }
+  .compose-btn:hover{box-shadow:var(--e2); background:rgba(63,232,201,0.2);}
+
+  .drawer-section-label{
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--ink-faint); padding:14px 16px 6px;
+  }
+
+  .nav-item{
+    display:flex; align-items:center; gap:16px;
+    padding:11px 16px; border-radius:0 20px 20px 0; margin-right:14px;
+    color:var(--on-surf-var); text-decoration:none; cursor:pointer;
+    font-size:13.5px; font-weight:500; position:relative; overflow:hidden;
+    transition:background .2s ease, color .2s ease;
+  }
+  .nav-item .material-symbols-outlined{color:var(--ink-faint); transition:color .2s ease;}
+  .nav-item:hover{background:var(--outline-soft);}
+  .nav-item .label{flex:1;}
+  .nav-item .badge{
+    font-family:var(--mono); font-size:10px; color:var(--ink-faint);
+    letter-spacing:.02em;
+  }
+  .nav-item.current{
+    background:var(--primary-container); color:var(--bio-teal); font-weight:700;
+  }
+  .nav-item.current .material-symbols-outlined{color:var(--bio-teal);}
+  .nav-item.current .badge{color:var(--bio-teal);}
+
+  .drawer hr{border:none; border-top:1px solid var(--outline-soft); margin:14px 10px;}
+
+  .drawer-footer-note{
+    margin-top:auto; padding:16px; font-family:var(--mono); font-size:10.5px;
+    color:var(--ink-faint); line-height:1.7;
+  }
+
+  /* ripple */
+  .ripple-el{position:absolute; border-radius:50%; transform:scale(0); background:rgba(255,255,255,.25); animation:ripple .55s ease-out; pointer-events:none;}
+  @keyframes ripple{to{transform:scale(3); opacity:0;}}
+
+  /* ======================================================
+     CONTENT
+  ====================================================== */
+  .content{grid-area:content; min-width:0; padding:8px clamp(16px,4vw,56px) 80px;}
+
+  .eyebrow{
+    font-family:var(--mono); font-size:11.5px; letter-spacing:.1em;
+    color:var(--bio-teal); text-transform:uppercase; margin-bottom:16px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:'';width:22px;height:1px;background:var(--bio-teal);}
+
+  h1{
+    font-family:var(--serif); font-weight:600; font-size:clamp(2.2rem, 5vw, 3.9rem);
+    line-height:1.05; letter-spacing:-.01em;
+  }
+  h1 em{
+    font-style:italic; font-weight:500;
+    background:linear-gradient(90deg, var(--bio-teal), var(--neural-violet));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  h2{
+    font-family:var(--serif); font-weight:600; font-size:clamp(1.6rem, 3vw, 2.3rem);
+    margin-bottom:22px; letter-spacing:-.005em;
+  }
+  h3{
+    font-family:var(--serif); font-weight:500; font-size:1.2rem;
+    margin:30px 0 14px; color:var(--ink);
+  }
+  p{color:var(--ink-dim); font-size:1rem; line-height:1.75; max-width:66ch;}
+  p + p{margin-top:14px;}
+  strong{color:var(--ink); font-weight:600;}
+
+  /* --- tarjeta "conversación" (surface elevada, look Gmail card) --- */
+  .surface{
+    background:var(--surf-1); border:1px solid var(--outline-soft);
+    border-radius:var(--radius-m); padding:34px clamp(20px,4vw,44px);
+    margin:22px 0 40px; box-shadow:var(--e1);
+  }
+  .surface.hero-surface{
+    margin-top:20px; padding-top:52px; padding-bottom:44px;
+    background:linear-gradient(160deg, var(--surf-1) 0%, var(--surf-2) 100%);
+  }
+
+  .reveal{opacity:0; transform:translateY(18px); transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1; transform:translateY(0);}
+
+  .hero .meta-row{
+    display:flex; gap:10px; margin-top:30px; flex-wrap:wrap; align-items:center;
+    font-family:var(--mono); font-size:11.5px; color:var(--ink-faint);
+  }
+  .hero .meta-row span.k{color:var(--ink-dim);}
+  .hero .sub{margin-top:22px; font-size:1.08rem; color:var(--ink-dim); max-width:58ch;}
+  .chip-row{display:flex; gap:8px; flex-wrap:wrap; margin-top:22px;}
+  .chip{
+    display:inline-flex; align-items:center; gap:6px;
+    font-family:var(--mono); font-size:11px; letter-spacing:.03em;
+    padding:7px 14px; border-radius:100px; border:1px solid var(--outline);
+    color:var(--ink-dim); background:var(--surf-2);
+  }
+  .chip .material-symbols-outlined{font-size:15px;}
+
+  /* --- info / quote box (chat/label estilo Material outlined card) --- */
+  .box{
+    border:1px solid var(--outline); border-radius:var(--radius-m);
+    padding:24px 26px; margin:20px 0;
+    background:var(--surf-2); border-left:3px solid var(--bio-teal);
+  }
+  .box.violet{border-left-color:var(--neural-violet); background:rgba(179,157,255,0.05);}
+  .box .tag{font-family:var(--mono); font-size:10.5px; color:var(--bio-teal); letter-spacing:.08em; text-transform:uppercase; margin-bottom:10px; display:block;}
+  .box.violet .tag{color:var(--neural-violet);}
+  .box p{max-width:none; color:var(--ink);}
+
+  /* --- listas estilo filas de Gmail (checkbox/dot + texto) --- */
+  .list-row{
+    display:flex; gap:16px; align-items:flex-start;
+    padding:13px 10px; border-radius:var(--radius-s);
+    transition:background .2s ease;
+  }
+  .list-row:hover{background:var(--outline-soft);}
+  .list-row .dot-ico{
+    width:26px; height:26px; border-radius:50%; flex-shrink:0; margin-top:1px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--primary-container); color:var(--bio-teal);
+  }
+  .list-row .dot-ico .material-symbols-outlined{font-size:15px;}
+  .list-row p{margin:0; font-size:.96rem;}
+  .obj-list{list-style:none; margin-top:8px;}
+
+  /* --- metodología: filas numeradas estilo Gmail list --- */
+  .steps{margin-top:10px;}
+  .step{
+    display:flex; gap:18px; align-items:flex-start;
+    padding:16px 10px; border-radius:var(--radius-s);
+    border-bottom:1px solid var(--outline-soft); transition:background .2s ease;
+  }
+  .step:hover{background:var(--outline-soft);}
+  .step:last-child{border-bottom:none;}
+  .step .num{
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    background:var(--surf-3); color:var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono); font-size:12px;
+  }
+  .step .txt strong{display:block; font-size:1rem; margin-bottom:4px; color:var(--ink); font-family:var(--serif); font-weight:500; font-size:1.1rem;}
+  .step .txt p{margin:0; font-size:.94rem;}
+
+  /* --- tarjetas de enfermedades: cards Material elevadas --- */
+  .disease-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:14px;
+    margin:26px 0;
+  }
+  @media (max-width:800px){ .disease-grid{grid-template-columns:1fr;} }
+  .d-card{
+    background:var(--surf-2); border:1px solid var(--outline-soft); border-radius:var(--radius-m);
+    padding:24px 22px; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .d-card:hover{transform:translateY(-3px); box-shadow:var(--e2); border-color:var(--outline);}
+  .d-card .dot{width:10px;height:10px;border-radius:50%;margin-bottom:14px;}
+  .d-card.alz .dot{background:var(--alz); box-shadow:0 0 10px var(--alz);}
+  .d-card.park .dot{background:var(--park); box-shadow:0 0 10px var(--park);}
+  .d-card.ela .dot{background:var(--ela); box-shadow:0 0 10px var(--ela);}
+  .d-card h4{font-family:var(--serif); font-size:1.15rem; font-weight:600; margin-bottom:10px;}
+  .d-card .field{margin-top:13px;}
+  .d-card .field .k{font-family:var(--mono); font-size:9.5px; letter-spacing:.06em; color:var(--ink-faint); text-transform:uppercase; margin-bottom:4px;}
+  .d-card .field .v{font-size:.9rem; color:var(--ink-dim); line-height:1.55;}
+
+  /* --- tabla comparativa estilo Material data table --- */
+  .table-wrap{overflow-x:auto; border-radius:var(--radius-m); border:1px solid var(--outline-soft); margin-top:14px;}
+  .cmp-table{width:100%; border-collapse:collapse; min-width:560px;}
+  .cmp-table thead tr{background:var(--surf-2);}
+  .cmp-table th{
+    text-align:left; font-family:var(--mono); font-size:10.5px; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--ink-faint); font-weight:400;
+    padding:13px 18px;
+  }
+  .cmp-table td{
+    padding:16px 18px; border-top:1px solid var(--outline-soft);
+    font-size:.92rem; color:var(--ink-dim); vertical-align:top;
+  }
+  .cmp-table td:first-child{color:var(--ink); font-family:var(--serif); font-size:1.02rem; font-weight:500;}
+  .cmp-table tr td{background:var(--surf-1);}
+  .cmp-table tr:hover td{background:var(--surf-2);}
+  .cmp-table .swatch{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:8px;}
+
+  /* --- comparación abismo/cerebro --- */
+  .depth-compare{
+    display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:34px 0;
+  }
+  @media (max-width:800px){ .depth-compare{grid-template-columns:1fr;} }
+  .dc-col{padding:28px 26px; border-radius:var(--radius-m); border:1px solid var(--outline-soft);}
+  .dc-col.ocean{background:linear-gradient(180deg, #0a1730, #0d1e3d);}
+  .dc-col.brain{background:linear-gradient(180deg, #14112c, #1a1338);}
+  .dc-col .kicker{font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; display:flex; align-items:center; gap:8px;}
+  .dc-col.ocean .kicker{color:var(--bio-teal);}
+  .dc-col.brain .kicker{color:var(--neural-violet);}
+  .dc-col .big{font-family:var(--serif); font-size:1.9rem; margin-bottom:12px; line-height:1.15;}
+  .dc-col p{font-size:.9rem; max-width:none;}
+
+  .tmao-box{
+    margin-top:22px; padding:22px 24px; border-radius:var(--radius-m);
+    border:1px solid var(--bio-teal-dim); background:rgba(63,232,201,0.06); position:relative;
+  }
+  .tmao-box .tag{
+    display:inline-block; background:var(--surf-1); padding:2px 10px; border-radius:100px;
+    font-family:var(--mono); font-size:10.5px; color:var(--bio-teal); letter-spacing:.08em;
+    margin-bottom:10px; border:1px solid var(--bio-teal-dim);
+  }
+  .tmao-box p{color:var(--ink); max-width:none; font-size:.96rem;}
+
+  /* --- conclusión --- */
+  .verdict{display:flex; align-items:center; gap:14px; margin-bottom:22px; flex-wrap:wrap;}
+  .verdict .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    font-family:var(--mono); font-size:10.5px; letter-spacing:.06em; text-transform:uppercase;
+    padding:9px 16px; background:rgba(255,201,120,0.12); color:var(--park); border-radius:100px;
+    border:1px solid rgba(255,201,120,0.35);
+  }
+  .reasons{margin-top:10px; display:flex; flex-direction:column; gap:2px;}
+
+  /* --- fuentes: filas estilo Gmail (remitente / asunto / dominio) --- */
+  .sources{list-style:none; margin-top:14px; display:flex; flex-direction:column; gap:2px;}
+  .source-row{
+    display:flex; align-items:center; gap:16px; padding:14px 12px;
+    border-radius:var(--radius-s); border-bottom:1px solid var(--outline-soft);
+    transition:background .2s ease;
+  }
+  .source-row:hover{background:var(--outline-soft);}
+  .source-row .s-ico{
+    width:30px; height:30px; border-radius:50%; flex-shrink:0;
+    background:var(--surf-3); color:var(--ink-dim);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .source-row .s-ico .material-symbols-outlined{font-size:16px;}
+  .source-row .s-body{flex:1; min-width:0;}
+  .source-row .s-name{font-size:.92rem; color:var(--ink); font-weight:600;}
+  .source-row .s-title{font-size:.86rem; color:var(--ink-faint); margin-top:1px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .source-row .s-domain{
+    font-family:var(--mono); font-size:10.5px; color:var(--bio-teal);
+    text-decoration:none; padding:5px 10px; border:1px solid var(--outline);
+    border-radius:100px; flex-shrink:0; white-space:nowrap;
+  }
+  .source-row .s-domain:hover{border-color:var(--bio-teal); background:var(--primary-container);}
+
+  /* --- FAQ: acordeón estilo lista de correo expandible --- */
+  .faq-list{display:flex; flex-direction:column; gap:8px; margin-top:10px;}
+  .faq-item{
+    border:1px solid var(--outline-soft); border-radius:var(--radius-m);
+    background:var(--surf-2); overflow:hidden; transition:border-color .2s ease, background .2s ease;
+  }
+  .faq-item[open]{border-color:var(--bio-teal-dim); background:var(--surf-3);}
+  .faq-item summary{
+    list-style:none; cursor:pointer; display:flex; align-items:center; gap:16px;
+    padding:16px 18px; user-select:none;
+  }
+  .faq-item summary::-webkit-details-marker{display:none;}
+  .faq-item summary .dot-ico{background:var(--secondary-container); color:var(--neural-violet); flex-shrink:0;}
+  .faq-item[open] summary .dot-ico{background:var(--primary-container); color:var(--bio-teal);}
+  .faq-item summary .q-text{
+    flex:1; font-family:var(--sans); font-weight:600; font-size:.98rem; color:var(--ink);
+  }
+  .faq-item summary .chevron{
+    color:var(--ink-faint); transition:transform .25s ease; flex-shrink:0;
+  }
+  .faq-item[open] summary .chevron{transform:rotate(180deg); color:var(--bio-teal);}
+  .faq-item .a-body{
+    padding:0 18px 20px 60px; animation:faqOpen .25s ease;
+  }
+  .faq-item .a-body p{font-size:.94rem; max-width:none; margin:0;}
+  @keyframes faqOpen{ from{opacity:0; transform:translateY(-4px);} to{opacity:1; transform:translateY(0);} }
+
+  /* --- footer --- */
+  footer{
+    padding:40px clamp(20px,4vw,44px); border-top:1px solid var(--outline-soft);
+    display:flex; flex-direction:column; gap:6px; color:var(--ink-faint);
+  }
+  footer .f-title{font-family:var(--serif); font-size:1.15rem; font-weight:500; margin-bottom:8px; color:var(--ink);}
+  footer .f-line{font-family:var(--mono); font-size:11.5px;}
+  footer .f-line strong{color:var(--ink-dim); font-weight:400;}
+
+  /* --- FAB --- */
+  .fab{
+    position:fixed; right:26px; bottom:26px; z-index:150;
+    width:52px; height:52px; border-radius:16px; border:none;
+    background:var(--bio-teal); color:var(--surf-0);
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:var(--e3); cursor:pointer; opacity:0; transform:translateY(12px) scale(.9);
+    pointer-events:none; transition:opacity .25s ease, transform .25s ease;
+  }
+  .fab.show{opacity:1; transform:translateY(0) scale(1); pointer-events:auto;}
+  .fab:active{transform:scale(.94);}
+
+  /* --- resaltado de búsqueda --- */
+  mark.search-hit{background:rgba(63,232,201,0.35); color:var(--ink); border-radius:3px; padding:0 1px;}
+  .no-match{opacity:.25; filter:saturate(.4);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .reveal{transition:none; opacity:1; transform:none;}
+    .particle{animation:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ocean-bg"></div>
+<div class="particles" id="particles"></div>
+
+<div class="app-shell">
+
+  <!-- ===== App bar ===== -->
+  <header class="appbar" id="appbar">
+    <button class="icon-btn menu-toggle" id="menuToggle" aria-label="Abrir menú">
+      <span class="material-symbols-outlined">menu</span>
+    </button>
+    <div class="brandmark">
+      <div class="glyph">TMAO</div>
+      <div class="txt">
+        <span class="t1">Del abismo al cerebro</span>
+        <span class="t2">Colegio Andino Montessori · I° Medio</span>
+      </div>
+    </div>
+    <div class="search-field">
+      <span class="material-symbols-outlined">search</span>
+      <input type="text" id="siteSearch" placeholder="Buscar en el informe — ej. «chaperonas», «Parkinson»…" autocomplete="off">
+      <button class="icon-btn" id="clearSearch" style="display:none;" aria-label="Limpiar búsqueda">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="appbar-right">
+      <button class="icon-btn" id="printBtn" title="Imprimir / guardar como PDF" aria-label="Imprimir">
+        <span class="material-symbols-outlined">print</span>
+      </button>
+      <div class="avatar-group" title="Amanda Valenzuela, Esperanza Mancilla, Sebastián Fuentealba">
+        <div class="avatar">AV</div>
+        <div class="avatar">EM</div>
+        <div class="avatar">SF</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+  <!-- ===== Drawer ===== -->
+  <nav class="drawer" id="drawer">
+    <button class="compose-btn ripple" id="printBtn2">
+      <span class="material-symbols-outlined">picture_as_pdf</span>
+      Imprimir informe
+    </button>
+
+    <div class="drawer-section-label">Recorrido</div>
+    <a href="#inicio" class="nav-item ripple" data-id="inicio">
+      <span class="material-symbols-outlined">water_drop</span>
+      <span class="label">Inicio</span>
+      <span class="badge">0 m</span>
+    </a>
+    <a href="#investigacion" class="nav-item ripple" data-id="investigacion">
+      <span class="material-symbols-outlined">science</span>
+      <span class="label">Pregunta e hipótesis</span>
+      <span class="badge">método</span>
+    </a>
+    <a href="#enfermedades" class="nav-item ripple" data-id="enfermedades">
+      <span class="material-symbols-outlined">neurology</span>
+      <span class="label">Enfermedades</span>
+      <span class="badge">3</span>
+    </a>
+    <a href="#chaperonas" class="nav-item ripple" data-id="chaperonas">
+      <span class="material-symbols-outlined">biotech</span>
+      <span class="label">Chaperonas hadales</span>
+      <span class="badge">10 916 m</span>
+    </a>
+    <a href="#resultados" class="nav-item ripple" data-id="resultados">
+      <span class="material-symbols-outlined">fact_check</span>
+      <span class="label">Resultados</span>
+      <span class="badge">final</span>
+    </a>
+    <a href="#faq" class="nav-item ripple" data-id="faq">
+      <span class="material-symbols-outlined">help</span>
+      <span class="label">Preguntas frecuentes</span>
+      <span class="badge">FAQ</span>
+    </a>
+
+    <hr>
+    <div class="drawer-section-label">Créditos</div>
+    <div class="nav-item" style="cursor:default;">
+      <span class="material-symbols-outlined">group</span>
+      <span class="label">3 autoras/autor</span>
+    </div>
+    <div class="nav-item" style="cursor:default;">
+      <span class="material-symbols-outlined">calendar_today</span>
+      <span class="label">04/08/2026</span>
+    </div>
+
+    <div class="drawer-footer-note">
+      Proyecto científico · Biología marina + neurociencia<br>
+      I° Medio · 2026
+    </div>
+  </nav>
+
+  <!-- ===== Content ===== -->
+  <main class="content">
+
+    <section class="hero surface hero-surface" id="inicio">
+      <div class="eyebrow">Proyecto científico · 2026</div>
+      <h1>De las profundidades<br>oceánicas a la <em>neuroprotección</em></h1>
+      <p class="sub">Una molécula que estabiliza proteínas a 10 900 metros bajo el mar, y la pregunta de si podría enseñarnos algo sobre el cerebro humano.</p>
+      <div class="meta-row"><span class="k">Autoras y autor</span> — Amanda Valenzuela, Esperanza Mancilla, Sebastián Fuentealba</div>
+      <div class="meta-row"><span class="k">Fecha</span> — 04/08/2026</div>
+      <div class="chip-row">
+        <span class="chip"><span class="material-symbols-outlined">water_drop</span> Zona hadal</span>
+        <span class="chip"><span class="material-symbols-outlined">psychology</span> Neurodegeneración</span>
+        <span class="chip"><span class="material-symbols-outlined">biotech</span> Chaperonas químicas</span>
+      </div>
+    </section>
+
+    <section id="investigacion" class="reveal surface">
+      <div class="eyebrow">Punto de partida</div>
+      <h2>Pregunta e hipótesis</h2>
+      <div class="box">
+        <span class="tag">Pregunta de investigación</span>
+        <p>¿De qué manera las chaperonas químicas y los osmolitos de la fauna hadal (como el TMAO) podrían inspirar terapias para prevenir el mal plegamiento de proteínas en enfermedades neurodegenerativas?</p>
+      </div>
+      <div class="box violet">
+        <span class="tag">Hipótesis</span>
+        <p>El desarrollo de tratamientos médicos basados en chaperonas químicas logrará reducir el número de pacientes con enfermedades neurodegenerativas.</p>
+      </div>
+
+      <h3>Objetivo general</h3>
+      <p>Determinar si, en un caso hipotético, las chaperonas químicas podrían ser el tratamiento definitivo para enfermedades neurodegenerativas.</p>
+
+      <h3>Objetivos específicos</h3>
+      <ul class="obj-list">
+        <li class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">looks_one</span></span><p>Comprender cómo se generan las enfermedades neurodegenerativas.</p></li>
+        <li class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">looks_two</span></span><p>Explicar qué son las chaperonas químicas.</p></li>
+        <li class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">looks_3</span></span><p>Relacionar el TMAO con las proteínas y las funciones del cerebro.</p></li>
+        <li class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">looks_4</span></span><p>Determinar la posibilidad de un tratamiento.</p></li>
+      </ul>
+
+      <h3>Metodología</h3>
+      <div class="steps">
+        <div class="step"><div class="num">01</div><div class="txt"><strong>Búsqueda</strong><p>Investigar en fuentes confiables sobre chaperonas químicas y enfermedades neurodegenerativas.</p></div></div>
+        <div class="step"><div class="num">02</div><div class="txt"><strong>Selección</strong><p>Filtrar la información relevante para un tratamiento cuantitativo.</p></div></div>
+        <div class="step"><div class="num">03</div><div class="txt"><strong>Visualización</strong><p>Crear gráficos con la información seleccionada.</p></div></div>
+        <div class="step"><div class="num">04</div><div class="txt"><strong>Síntesis</strong><p>Relacionar ambos temas — biología marina y neurociencia.</p></div></div>
+        <div class="step"><div class="num">05</div><div class="txt"><strong>Divulgación</strong><p>Crear una presentación para comunicar los hallazgos.</p></div></div>
+      </div>
+    </section>
+
+    <section id="enfermedades" class="reveal surface">
+      <div class="eyebrow">Contexto clínico</div>
+      <h2>Tres formas de perder neuronas</h2>
+      <p>Las enfermedades neurodegenerativas son afecciones al cerebro que pueden afectar el movimiento, el lenguaje, la memoria, el razonamiento y muchas otras capacidades. Cada una falla de un modo distinto.</p>
+
+      <div class="disease-grid">
+        <div class="d-card alz">
+          <div class="dot"></div>
+          <h4>Alzheimer</h4>
+          <div class="field"><div class="k">Mecanismo</div><div class="v">Acumulación de placas seniles — sustancias tóxicas en el cerebro.</div></div>
+          <div class="field"><div class="k">Respuesta del cerebro</div><div class="v">Las células microgliales rodean las placas para contenerlas y reducir el daño.</div></div>
+        </div>
+        <div class="d-card park">
+          <div class="dot"></div>
+          <h4>Parkinson</h4>
+          <div class="field"><div class="k">Mecanismo</div><div class="v">Pérdida de neuronas dopaminérgicas en la sustancia negra.</div></div>
+          <div class="field"><div class="k">Marcador</div><div class="v">Agregados proteicos conocidos como Cuerpos de Lewy.</div></div>
+        </div>
+        <div class="d-card ela">
+          <div class="dot"></div>
+          <h4>Esclerosis Lateral Amiotrófica</h4>
+          <div class="field"><div class="k">Mecanismo</div><div class="v">Daño progresivo a las neuronas que controlan el movimiento voluntario.</div></div>
+          <div class="field"><div class="k">Particularidad</div><div class="v">Debilita caminar, hablar, tragar y respirar — sin afectar mente ni sentidos.</div></div>
+        </div>
+      </div>
+
+      <h3>Comparación directa</h3>
+      <div class="table-wrap">
+        <table class="cmp-table">
+          <thead><tr><th>Enfermedad</th><th>Tipo de daño</th><th>Proteína implicada</th><th>Función afectada</th></tr></thead>
+          <tbody>
+            <tr><td><span class="swatch" style="background:var(--alz)"></span>Alzheimer</td><td>Acumulación de placas</td><td>Beta-amiloide, tau</td><td>Memoria, cognición</td></tr>
+            <tr><td><span class="swatch" style="background:var(--park)"></span>Parkinson</td><td>Pérdida neuronal</td><td>Alfa-sinucleína</td><td>Movimiento, coordinación</td></tr>
+            <tr><td><span class="swatch" style="background:var(--ela)"></span>ELA</td><td>Degeneración motora</td><td>SOD1, TDP-43</td><td>Movimiento voluntario</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="chaperonas" class="reveal surface">
+      <div class="eyebrow">10 916 metros bajo el nivel del mar</div>
+      <h2>Las chaperonas de la zona hadal</h2>
+      <p>Las <strong>chaperonas químicas</strong> son moléculas pequeñas que estabilizan la estructura de las proteínas, facilitando su correcto plegamiento. Ya existen, de forma natural, en nuestro propio cerebro.</p>
+
+      <div class="depth-compare">
+        <div class="dc-col ocean">
+          <div class="kicker"><span class="material-symbols-outlined">water</span>Fosa oceánica</div>
+          <div class="big">Chaperonas generales y específicas</div>
+          <p>Las específicas estabilizan lo suficiente a la proteína como para "engañar" al sistema de control del retículo endoplasmático — y así ser transportada a su destino final, como la membrana plasmática.</p>
+        </div>
+        <div class="dc-col brain">
+          <div class="kicker"><span class="material-symbols-outlined">psychology</span>Cerebro humano</div>
+          <div class="big">El mismo mecanismo, otro contexto</div>
+          <p>El plegamiento correcto de proteínas es igual de crítico en el sistema nervioso — cuando falla, es uno de los orígenes de las enfermedades neurodegenerativas.</p>
+        </div>
+      </div>
+
+      <div class="tmao-box">
+        <span class="tag">TMAO</span>
+        <p><strong>Óxido de trimetilamina.</strong> Es el rasgo distintivo de la fauna hadal: un soluto que estabiliza las proteínas y evita que el agua a alta presión las compacte, ayudándolas a recuperar su forma funcional. Es una adaptación evolutiva para contrarrestar la presión extrema de las profundidades.</p>
+      </div>
+
+      <h3>¿Por qué importa para la neurociencia?</h3>
+      <p>Si el TMAO permite que las proteínas de organismos hadales permanezcan estables bajo presiones que destruirían proteínas normales, la pregunta natural es si ese mismo principio podría inspirar formas de estabilizar proteínas que se pliegan mal en el cerebro humano.</p>
+    </section>
+
+    <section id="resultados" class="reveal surface">
+      <div class="eyebrow">Cierre de la investigación</div>
+      <h2>Resultados y conclusión</h2>
+
+      <div class="verdict">
+        <span class="pill"><span class="material-symbols-outlined" style="font-size:14px;">cancel</span>Hipótesis rechazada</span>
+      </div>
+      <p>La evidencia recopilada no permite confirmar que las chaperonas químicas puedan usarse, hoy, como tratamiento definitivo para enfermedades neurodegenerativas.</p>
+
+      <h3>Razones del rechazo</h3>
+      <div class="reasons">
+        <div class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">remove</span></span><p>Faltan estudios y datos suficientes en este campo específico.</p></div>
+        <div class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">remove</span></span><p>Existe poco interés científico en la línea de investigación aún.</p></div>
+        <div class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">remove</span></span><p>Alta complejidad experimental para trasladar el hallazgo del océano al cerebro humano.</p></div>
+        <div class="list-row"><span class="dot-ico"><span class="material-symbols-outlined">remove</span></span><p>Se desconoce si son seguras, o si tienen efectos secundarios en el cerebro humano.</p></div>
+      </div>
+
+      <div class="box" style="margin-top:26px;">
+        <span class="tag">Conclusión</span>
+        <p>Aunque las chaperonas de la zona hadal podrían, en principio, reparar proteínas mal plegadas y servir de base para futuras terapias, <strong>por ahora no inspiran terapias concretas</strong> para enfermedades neurodegenerativas. La biomimética abre una pregunta legítima; la evidencia actual todavía no la responde.</p>
+      </div>
+
+      <h3>Fuentes principales</h3>
+      <ul class="sources">
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">newspaper</span></span>
+          <span class="s-body"><div class="s-name">Deutsche Welle (2016)</div><div class="s-title">Chaperonas, ¿cura contra el Alzheimer?</div></span>
+          <a class="s-domain" href="https://www.dw.com/es/chaperonas-cura-contra-el-alzheimer/a35908407" target="_blank" rel="noopener">dw.com</a>
+        </li>
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">local_hospital</span></span>
+          <span class="s-body"><div class="s-name">Mayo Clinic</div><div class="s-title">Enfermedad de Alzheimer: diagnóstico y tratamiento</div></span>
+          <a class="s-domain" href="https://www.mayoclinic.org/es/diseases-conditions/alzheimersdisease/diagnosis-treatment/drc-20350453" target="_blank" rel="noopener">mayoclinic.org</a>
+        </li>
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">newspaper</span></span>
+          <span class="s-body"><div class="s-name">La Tercera (2023)</div><div class="s-title">Alzheimer y Parkinson entre las principales causas de muerte en Chile</div></span>
+          <a class="s-domain" href="https://www.latercera.com/quepasa/noticia/alzheimer-y-parkinson-estan-entre-las-principales-causas-de-muerte-en-chile/KQH65UT64RGSBMPXVLQOZBXSSQ/" target="_blank" rel="noopener">latercera.com</a>
+        </li>
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">account_balance</span></span>
+          <span class="s-body"><div class="s-name">Ministerio de Salud de Chile — DIPRECE</div><div class="s-title">Enfermedad de Alzheimer y otras demencias</div></span>
+          <a class="s-domain" href="https://diprece.minsal.cl/informacion-para-la-comunidad-enfermedad-de-alzheimer-y-otras-demencias/" target="_blank" rel="noopener">diprece.minsal.cl</a>
+        </li>
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">school</span></span>
+          <span class="s-body"><div class="s-name">Revista Chilena de Salud Pública (2012)</div><div class="s-title">Carga de enfermedad por demencias en Chile</div></span>
+          <a class="s-domain" href="https://revistasaludpublica.uchile.cl/index.php/RCSP/article/download/26633/28208/87946" target="_blank" rel="noopener">uchile.cl</a>
+        </li>
+        <li class="source-row">
+          <span class="s-ico"><span class="material-symbols-outlined">folder</span></span>
+          <span class="s-body"><div class="s-name">Referencias completas</div><div class="s-title">Disponibles en el documento original del proyecto</div></span>
+        </li>
+      </ul>
+    </section>
+
+    <section id="faq" class="reveal surface">
+      <div class="eyebrow">Dudas comunes</div>
+      <h2>Preguntas frecuentes</h2>
+      <p>Un resumen rápido de las preguntas que más surgen sobre el proyecto, pensado para quien no quiera leer el informe completo.</p>
+
+      <div class="faq-list">
+        <details class="faq-item" open>
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">water_drop</span></span>
+            <span class="q-text">¿Qué es el TMAO y por qué se estudió?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>El óxido de trimetilamina (TMAO) es un soluto que se acumula en organismos de la zona hadal. Estabiliza sus proteínas y evita que el agua a alta presión las compacte, permitiéndoles conservar su forma funcional a más de 10 000 metros de profundidad. Se estudió como posible punto de partida para pensar en la estabilización de proteínas en otros contextos, como el cerebro humano.</p></div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">biotech</span></span>
+            <span class="q-text">¿Qué son las chaperonas químicas?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>Son moléculas pequeñas que ayudan a que las proteínas se plieguen correctamente. Existen tanto en organismos hadales como, de forma natural, en el cuerpo humano. Cuando el plegamiento de proteínas falla, puede derivar en enfermedades neurodegenerativas.</p></div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">psychology</span></span>
+            <span class="q-text">¿Por qué el proyecto se centró en Alzheimer, Parkinson y ELA?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>Las tres son enfermedades neurodegenerativas causadas, al menos en parte, por proteínas que se pliegan mal (beta-amiloide y tau, alfa-sinucleína, y SOD1/TDP-43 respectivamente). Esto las hacía casos comparables entre sí y adecuados para poner a prueba la hipótesis de las chaperonas químicas.</p></div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">cancel</span></span>
+            <span class="q-text">¿Por qué se rechazó la hipótesis?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>Porque la evidencia disponible hoy no permite confirmarla: faltan estudios específicos en este cruce entre biología marina y neurociencia, hay poco interés científico en la línea de investigación, es experimentalmente muy complejo trasladar el hallazgo del océano al cerebro humano, y se desconoce si estas chaperonas serían seguras en el sistema nervioso.</p></div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">medication</span></span>
+            <span class="q-text">Entonces, ¿existe hoy un tratamiento basado en esto?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>No. El proyecto concluye que, por ahora, las chaperonas de la zona hadal no inspiran terapias concretas para enfermedades neurodegenerativas. La idea es biomiméticamente interesante, pero sigue siendo una pregunta abierta, no un tratamiento disponible.</p></div>
+        </details>
+
+        <details class="faq-item">
+          <summary>
+            <span class="dot-ico"><span class="material-symbols-outlined">travel_explore</span></span>
+            <span class="q-text">¿De dónde salió la idea de comparar el océano profundo con el cerebro?</span>
+            <span class="material-symbols-outlined chevron">expand_more</span>
+          </summary>
+          <div class="a-body"><p>De notar que el mismo problema biológico —proteínas que necesitan plegarse correctamente para funcionar— aparece en dos contextos extremos y muy distintos: la presión física de la fosa oceánica y el ambiente del sistema nervioso. Esa coincidencia funcional fue el punto de partida para preguntarse si un mecanismo evolutivo del abismo podía decir algo sobre neuroprotección.</p></div>
+        </details>
+      </div>
+    </section>
+
+    <footer>
+      <div class="f-title">Colegio Andino Montessori — Proyecto Científico</div>
+      <div class="f-line"><strong>Autoras y autor:</strong> Amanda Valenzuela, Esperanza Mancilla, Sebastián Fuentealba</div>
+      <div class="f-line"><strong>Curso:</strong> I° Medio · 2026</div>
+    </footer>
+
+  </main>
+</div>
+
+<button class="fab" id="fab" aria-label="Volver arriba">
+  <span class="material-symbols-outlined">arrow_upward</span>
+</button>
+
+<script>
+  // ---------- App bar shadow on scroll ----------
+  const appbar = document.getElementById('appbar');
+  const fab = document.getElementById('fab');
+  window.addEventListener('scroll', () => {
+    appbar.classList.toggle('scrolled', window.scrollY > 10);
+    fab.classList.toggle('show', window.scrollY > 500);
+  });
+
+  // ---------- Drawer (mobile) ----------
+  const drawer = document.getElementById('drawer');
+  const backdrop = document.getElementById('drawerBackdrop');
+  const menuToggle = document.getElementById('menuToggle');
+  function openDrawer(){ drawer.classList.add('open'); backdrop.classList.add('show'); }
+  function closeDrawer(){ drawer.classList.remove('open'); backdrop.classList.remove('show'); }
+  menuToggle.addEventListener('click', () => {
+    drawer.classList.contains('open') ? closeDrawer() : openDrawer();
+  });
+  backdrop.addEventListener('click', closeDrawer);
+  drawer.querySelectorAll('.nav-item[href]').forEach(a => a.addEventListener('click', closeDrawer));
+
+  // ---------- FAB scroll to top ----------
+  fab.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'}));
+
+  // ---------- Print ----------
+  document.getElementById('printBtn').addEventListener('click', () => window.print());
+  document.getElementById('printBtn2').addEventListener('click', () => window.print());
+
+  // ---------- Active nav link on scroll ----------
+  const sections = document.querySelectorAll('main section[id]');
+  const navItems = document.querySelectorAll('.nav-item[data-id]');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navItems.forEach(n => n.classList.toggle('current', n.dataset.id === id));
+        entry.target.classList.add('in');
+      }
+    });
+  }, {threshold:0.3});
+  sections.forEach(s => io.observe(s));
+
+  const revealIO = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, {threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el => revealIO.observe(el));
+
+  // ---------- Ripple effect ----------
+  document.querySelectorAll('.ripple').forEach(el => {
+    el.style.position = el.style.position || 'relative';
+    el.style.overflow = 'hidden';
+    el.addEventListener('click', function(e){
+      const rect = this.getBoundingClientRect();
+      const d = Math.max(rect.width, rect.height);
+      const r = document.createElement('span');
+      r.className = 'ripple-el';
+      r.style.width = r.style.height = d + 'px';
+      r.style.left = (e.clientX - rect.left - d/2) + 'px';
+      r.style.top = (e.clientY - rect.top - d/2) + 'px';
+      this.appendChild(r);
+      setTimeout(() => r.remove(), 550);
+    });
+  });
+
+  // ---------- Ambient particles ----------
+  const pContainer = document.getElementById('particles');
+  const isMobile = window.innerWidth < 700;
+  const count = isMobile ? 14 : 30;
+  for (let i=0; i<count; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random()*100 + 'vw';
+    p.style.top = (100 + Math.random()*20) + 'vh';
+    p.style.animationDuration = (14 + Math.random()*18) + 's';
+    p.style.animationDelay = (Math.random()*10) + 's';
+    p.style.opacity = (0.12 + Math.random()*0.3).toFixed(2);
+    pContainer.appendChild(p);
+  }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('.particle').forEach(p => p.style.animation = 'none');
+  }
+
+  // ---------- Site search (estilo Gmail: filtra y resalta) ----------
+  const searchInput = document.getElementById('siteSearch');
+  const clearBtn = document.getElementById('clearSearch');
+  const searchableSections = Array.from(sections);
+  let originalHTML = new Map();
+  searchableSections.forEach(s => originalHTML.set(s.id, s.innerHTML));
+
+  function clearHighlights(){
+    searchableSections.forEach(s => {
+      s.innerHTML = originalHTML.get(s.id);
+      s.classList.remove('no-match');
+    });
+  }
+
+  function runSearch(term){
+    if (!term){ clearHighlights(); clearBtn.style.display = 'none'; return; }
+    clearBtn.style.display = 'inline-flex';
+    const needle = term.toLowerCase();
+    let firstMatch = null;
+
+    searchableSections.forEach(s => {
+      s.innerHTML = originalHTML.get(s.id);
+      const text = s.textContent.toLowerCase();
+      const matches = text.includes(needle);
+      s.classList.toggle('no-match', !matches);
+      if (matches && !firstMatch) firstMatch = s;
+    });
+
+    // resaltar coincidencias dentro de nodos de texto simples (p, li, td, h*, strong)
+    if (firstMatch){
+      const walker = document.createTreeWalker(firstMatch, NodeFilter.SHOW_TEXT, null);
+      const re = new RegExp('(' + term.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + ')', 'gi');
+      const targets = [];
+      let node;
+      while ((node = walker.nextNode())){
+        if (node.nodeValue.toLowerCase().includes(needle)) targets.push(node);
+      }
+      targets.forEach(n => {
+        const span = document.createElement('span');
+        span.innerHTML = n.nodeValue.replace(re, '<mark class="search-hit">$1</mark>');
+        n.parentNode.replaceChild(span, n);
+      });
+      firstMatch.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+  }
+
+  let searchTimer;
+  searchInput.addEventListener('input', (e) => {
+    clearTimeout(searchTimer);
+    const val = e.target.value.trim();
+    searchTimer = setTimeout(() => runSearch(val), 200);
+  });
+  clearBtn.addEventListener('click', () => {
+    searchInput.value = '';
+    clearHighlights();
+    clearBtn.style.display = 'none';
+    searchInput.focus();
+  });
+</script>
+
+</body>
+</html>
