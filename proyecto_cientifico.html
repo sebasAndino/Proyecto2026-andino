@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>De las profundidades oceánicas a la neuroprotección</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        header .meta {
+            margin-top: 15px;
+            font-size: 0.95em;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: #f8f9fa;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #667eea;
+        }
+
+        nav button {
+            flex: 1;
+            padding: 15px 10px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        nav button:hover {
+            background: #e9ecef;
+        }
+
+        nav button.active {
+            background: #667eea;
+            color: white;
+            border-bottom: 4px solid #667eea;
+        }
+
+        .content {
+            padding: 40px 20px;
+        }
+
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .disease-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .disease-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.2);
+            border-left-color: #764ba2;
+        }
+
+        .disease-card.alzheimer {
+            border-left-color: #e74c3c;
+        }
+
+        .disease-card.parkinson {
+            border-left-color: #f39c12;
+        }
+
+        .disease-card.ela {
+            border-left-color: #3498db;
+        }
+
+        .disease-card h4 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .disease-card p {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            cursor: pointer;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-button:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .comparison-table th {
+            background: #667eea;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .comparison-table td {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .info-box {
+            background: #e8eaf6;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .info-box strong {
+            color: #667eea;
+        }
+
+        .conclusion-box {
+            background: #fff3cd;
+            border-left: 5px solid #f39c12;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .conclusion-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        .chaperone-section {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .chaperone-section h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .tmao-highlight {
+            background: #ffe8e8;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 5px solid #e74c3c;
+            margin: 15px 0;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 30px 20px;
+            text-align: center;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+
+        .authors {
+            margin: 15px 0;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        ul, ol {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        .objetivo {
+            background: #f0f4ff;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #667eea;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            nav button {
+                min-width: 100px;
+                font-size: 0.85em;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🌊 De las profundidades oceánicas a la neuroprotección</h1>
+            <p>Proyecto de Investigación Científica</p>
+            <div class="meta">
+                <strong>Colegio Andino Montessori</strong> • Primero Medio • 2026
+            </div>
+        </header>
+
+        <nav>
+            <button class="nav-btn active" onclick="showSection('inicio')">Inicio</button>
+            <button class="nav-btn" onclick="showSection('investigacion')">Investigación</button>
+            <button class="nav-btn" onclick="showSection('enfermedades')">Enfermedades</button>
+            <button class="nav-btn" onclick="showSection('chaperonas')">Chaperonas</button>
+            <button class="nav-btn" onclick="showSection('resultados')">Resultados</button>
+        </nav>
+
+        <div class="content">
+            <!-- SECCIÓN INICIO -->
+            <section id="inicio" class="active">
+                <h2>📋 Inicio del Proyecto</h2>
+                
+                <div class="info-box">
+                    <strong>Pregunta de Investigación:</strong><br>
+                    ¿De qué manera las chaperonas químicas y los osmolitos de la fauna hadal (como el TMAO) podrían inspirar terapias para prevenir el mal plegamiento de proteínas en enfermedades neurodegenerativas?
+                </div>
+
+                <h3>Hipótesis</h3>
+                <p>El desarrollo de tratamientos médicos basados en chaperonas químicas logrará reducir el número de pacientes con enfermedades neurodegenerativas.</p>
+
+                <h3>Objetivos Generales</h3>
+                <p>Determinar si, en un caso hipotético, las chaperonas químicas podrían ser el tratamiento definitivo para enfermedades neurodegenerativas.</p>
+
+                <h3>Objetivos Específicos</h3>
+                <div class="objetivo">✓ Comprender cómo se generan las enfermedades neurodegenerativas</div>
+                <div class="objetivo">✓ Explicar qué son las chaperonas químicas</div>
+                <div class="objetivo">✓ Relacionar el TMAO con las proteínas y las funciones del cerebro</div>
+                <div class="objetivo">✓ Determinar la posibilidad de un tratamiento</div>
+            </section>
+
+            <!-- SECCIÓN INVESTIGACIÓN -->
+            <section id="investigacion">
+                <h2>🔬 Metodología de Investigación</h2>
+                
+                <h3>Pasos Realizados:</h3>
+                <ol>
+                    <li>Investigación en fuentes confiables sobre las chaperonas químicas y las enfermedades neurodegenerativas</li>
+                    <li>Selección de información relevante para un tratamiento cuantitativo</li>
+                    <li>Creación de gráficos con la información seleccionada</li>
+                    <li>Relación entre ambos temas</li>
+                    <li>Creación de una presentación para divulgar la información científica</li>
+                </ol>
+
+                <h3>Fuentes Principales</h3>
+                <p>Se utilizaron fuentes confiables incluyendo:</p>
+                <ul>
+                    <li>Deutsche Welle</li>
+                    <li>Europa Press</li>
+                    <li>Mayo Clinic</li>
+                    <li>The New York Times</li>
+                    <li>PubMed Central - National Library of Medicine</li>
+                    <li>Ministerio de Salud de Chile</li>
+                    <li>Revistas científicas revisadas por pares</li>
+                </ul>
+            </section>
+
+            <!-- SECCIÓN ENFERMEDADES NEURODEGENERATIVAS -->
+            <section id="enfermedades">
+                <h2>🧠 Enfermedades Neurodegenerativas</h2>
+                
+                <p>Las enfermedades neurodegenerativas son afecciones al cerebro que pueden afectar al movimiento, el lenguaje, la memoria, el razonamiento, y muchas otras capacidades.</p>
+
+                <div class="comparison-grid">
+                    <div class="disease-card alzheimer">
+                        <h4>🔴 Alzheimer</h4>
+                        <p><strong>Característica principal:</strong> Acumulación de sustancias tóxicas en el cerebro llamadas placas seniles.</p>
+                        <p><strong>Mecanismo:</strong> El sistema inmune cerebral (células microgliales) rodea las placas para contenerlas y reducir el daño.</p>
+                    </div>
+
+                    <div class="disease-card parkinson">
+                        <h4>🟠 Parkinson</h4>
+                        <p><strong>Característica principal:</strong> Trastorno del movimiento causado por la pérdida de neuronas dopaminérgicas en la sustancia negra.</p>
+                        <p><strong>Mecanismo:</strong> Acumulación de agregados proteicos llamados Cuerpos de Lewy.</p>
+                    </div>
+
+                    <div class="disease-card ela">
+                        <h4>🔵 Esclerosis Lateral Amiotrófica (ELA)</h4>
+                        <p><strong>Característica principal:</strong> Debilita los músculos al dañar las neuronas que controlan los movimientos voluntarios.</p>
+                        <p><strong>Particularidad:</strong> No suele afectar la mente ni los sentidos.</p>
+                    </div>
+                </div>
+
+                <h3>Tabla Comparativa</h3>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Enfermedad</th>
+                            <th>Tipo de Daño</th>
+                            <th>Proteína Responsable</th>
+                            <th>Funciones Afectadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Alzheimer</strong></td>
+                            <td>Acumulación de placas</td>
+                            <td>Beta-amiloide, tau</td>
+                            <td>Memoria, cognición</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Parkinson</strong></td>
+                            <td>Pérdida neuronal</td>
+                            <td>Alfa-sinucleína (Cuerpos de Lewy)</td>
+                            <td>Movimiento, coordinación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ELA</strong></td>
+                            <td>Degeneración motora</td>
+                            <td>Proteína SOD1, TDP-43</td>
+                            <td>Movimiento voluntario</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- SECCIÓN CHAPERONAS -->
+            <section id="chaperonas">
+                <h2>🌊 Chaperonas Químicas: Moléculas de la Profundidad</h2>
+                
+                <h3>¿Qué son las Chaperonas Químicas?</h3>
+                <p>Son moléculas pequeñas que estabilizan la estructura de las proteínas, facilitando su correcto plegamiento.</p>
+
+                <div class="chaperone-section">
+                    <h4>Tipos de Chaperonas</h4>
+                    <p><strong>Chaperonas Generales:</strong> Actúan de manera inespecífica.</p>
+                    <p><strong>Chaperonas Específicas:</strong> Estabilizan las proteínas lo suficiente para "engañar" al sistema de control del retículo endoplasmático (RE) y sea transportada al destino final (como la membrana plasmática). Ya se encuentran naturalmente en nuestro cerebro.</p>
+                </div>
+
+                <h3>Chaperonas de la Zona Hadal (Profundidades Oceánicas)</h3>
+                <p>Las chaperonas de la fauna hadal presentan una diferencia significativa: la presencia de <strong>TMAO</strong> (óxido de trimetilamina).</p>
+
+                <div class="tmao-highlight">
+                    <strong>TMAO (Óxido de Trimetilamina):</strong><br>
+                    Es un soluto que estabiliza las proteínas de manera extraordinaria. <strong>Evita que el agua a alta presión compacte las proteínas</strong> y ayuda a que recuperen su forma funcional. Esta evolución es una adaptación para contrarrestar la presión presente en las profundidades oceánicas (hasta 1000+ atmósferas).
+                </div>
+
+                <h3>Potencial Terapéutico</h3>
+                <p>El concepto es que si el TMAO y otras chaperonas de organismos hadales pueden mantener proteínas estables bajo presión extrema, podrían potencialmente inspirar tratamientos para estabilizar proteínas mal plegadas en el cerebro humano.</p>
+
+                <div class="info-box">
+                    <strong>Aplicación Potencial:</strong> Las chaperonas de la zona hadal podrían servir de base para desarrollar terapias contra enfermedades neurodegenerativas causadas por mal plegamiento de proteínas.
+                </div>
+            </section>
+
+            <!-- SECCIÓN RESULTADOS -->
+            <section id="resultados">
+                <h2>📊 Resultados y Conclusiones</h2>
+                
+                <h3>Estado de la Hipótesis</h3>
+                <div class="conclusion-box">
+                    <h4>⚠️ Hipótesis Rechazada</h4>
+                    <p>Basándose en la investigación realizada, <strong>no se encontró evidencia suficiente para confirmar que las chaperonas químicas puedan usarse actualmente como tratamiento definitivo para enfermedades neurodegenerativas</strong>.</p>
+                </div>
+
+                <h3>Razones del Rechazo</h3>
+                <ul>
+                    <li><strong>Faltan estudios y datos suficientes:</strong> La investigación en este campo es aún incipiente</li>
+                    <li><strong>Poco interés científico:</strong> Es un área de investigación emergente pero no prioritaria actualmente</li>
+                    <li><strong>Alta complejidad experimental:</strong> Adaptar moléculas de organismos hadales al cerebro humano es extremadamente complejo</li>
+                    <li><strong>Seguridad desconocida:</strong> Se desconoce si son seguras o si tienen efectos secundarios en el cerebro humano</li>
+                </ul>
+
+                <h3>Conclusión Final</h3>
+                <div class="info-box">
+                    <p><strong>Aunque las chaperonas de la zona hadal podrían potencialmente reparar proteínas mal plegadas y servir de base para terapias contra enfermedades neurodegenerativas, por ahora no existe evidencia científica suficiente para afirmar que inspiren terapias directas para estas enfermedades.</strong></p>
+                    <p style="margin-top: 10px;"><em>La investigación continúa, y este campo representa una línea de investigación prometedora para el futuro de la medicina neurológica.</em></p>
+                </div>
+
+                <h3>Perspectivas Futuras</h3>
+                <p>A pesar del resultado negativo de la hipótesis inicial, este proyecto destaca la importancia de:</p>
+                <ul>
+                    <li>Biomimética: Aprender de la naturaleza para resolver problemas humanos</li>
+                    <li>Investigación interdisciplinaria: Conectar biología marina con neurociencia</li>
+                    <li>Pensamiento crítico: No todas las hipótesis iniciales se confirman, pero la investigación siempre aporta conocimiento</li>
+                </ul>
+            </section>
+        </div>
+
+        <footer>
+            <h3>Proyecto Científico - Colegio Andino Montessori</h3>
+            <div class="authors">
+                <strong>Autores:</strong> Amanda Valenzuela, Esperanza Mancilla, Sebastián Fuentealba
+            </div>
+            <p>Primero Medio • 04/08/2026</p>
+            <p style="margin-top: 20px; font-size: 0.9em;">Investigación basada en fuentes confiables y revisadas por pares</p>
+        </footer>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Ocultar todas las secciones
+            const sections = document.querySelectorAll('section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Mostrar la sección seleccionada
+            document.getElementById(sectionId).classList.add('active');
+
+            // Actualizar botones de navegación
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Scroll al inicio
+            window.scrollTo(0, 0);
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Página cargada');
+        });
+    </script>
+</body>
+</html>
