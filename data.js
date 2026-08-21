@@ -41,61 +41,66 @@ const DATA = {
       id: "alzheimer",
       nombre: "Alzheimer",
       resumen: "Acumulación de placas seniles que dañan la memoria y la cognición.",
-      mecanismo: "El Alzheimer se caracteriza por la acumulación de sustancias tóxicas en el cerebro llamadas placas seniles, formadas principalmente por proteína beta-amiloide y tau mal plegadas.",
+      mecanismo: "El Alzheimer se caracteriza por la acumulación de sustancias tóxicas en el cerebro llamadas placas seniles, formadas principalmente por proteína beta-amiloide y tau mal plegadas. Esto causa la muerte de células nerviosas y la pérdida progresiva de memoria y otras funciones cognitivas.",
       respuesta: "El sistema inmune cerebral, a través de las células microgliales, rodea las placas para intentar contenerlas y reducir el daño que provocan en el tejido neuronal.",
       proteina: "Beta-amiloide, tau",
       funcion: "Memoria y cognición",
       colorVar: "--alz",
-      imagen: "", imagenAlt: ""
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Brain_comparison_alzheimers.jpg/1200px-Brain_comparison_alzheimers.jpg",
+      imagenAlt: "Comparación de cerebro con Alzheimer versus cerebro normal"
     },
     {
       id: "parkinson",
       nombre: "Parkinson",
       resumen: "Trastorno del movimiento por pérdida de neuronas dopaminérgicas.",
-      mecanismo: "El Parkinson es un trastorno del movimiento causado por la pérdida progresiva de neuronas dopaminérgicas en la sustancia negra del cerebro.",
+      mecanismo: "El Parkinson es un trastorno del movimiento causado por la pérdida progresiva de neuronas dopaminérgicas en la sustancia negra del cerebro. Esto reduce los niveles de dopamina, neurotransmisor esencial para el control motor.",
       respuesta: "Se produce una acumulación de agregados proteicos conocidos como Cuerpos de Lewy, formados principalmente por la proteína alfa-sinucleína mal plegada.",
       proteina: "Alfa-sinucleína (Cuerpos de Lewy)",
       funcion: "Movimiento y coordinación",
       colorVar: "--park",
-      imagen: "", imagenAlt: ""
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Parkinson_Disease_Symptoms.png/1024px-Parkinson_Disease_Symptoms.png",
+      imagenAlt: "Síntomas de la enfermedad de Parkinson: temblor, rigidez, inestabilidad postural"
     },
     {
       id: "ela",
       nombre: "Esclerosis Lateral Amiotrófica (ELA)",
       resumen: "Debilita los músculos al dañar las neuronas motoras.",
-      mecanismo: "La ELA es una enfermedad que debilita progresivamente los músculos al dañar las neuronas que controlan los movimientos voluntarios.",
-      respuesta: "A diferencia del Alzheimer y el Parkinson, la ELA no suele afectar la mente ni los sentidos, concentrando el daño en la vía motora.",
+      mecanismo: "La ELA es una enfermedad que debilita progresivamente los músculos al dañar las neuronas que controlan los movimientos voluntarios. Esto causa parálisis progresiva que eventualmente afecta la capacidad de respirar.",
+      respuesta: "A diferencia del Alzheimer y el Parkinson, la ELA no suele afectar la mente ni los sentidos, concentrando el daño en la vía motora. Se caracteriza por la acumulación de proteínas TDP-43 mal plegadas.",
       proteina: "SOD1, TDP-43",
       funcion: "Movimiento voluntario",
       colorVar: "--ela",
-      imagen: "", imagenAlt: ""
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/ALS_nerve_cell.png/1024px-ALS_nerve_cell.png",
+      imagenAlt: "Comparación de neurona motora normal versus neurona afectada por ELA"
     }
   ],
 
   chaperonas: {
-    intro: "Son moléculas pequeñas que estabilizan la estructura de las proteínas, facilitando su correcto plegamiento — y algunas de las más notables provienen de organismos que viven bajo presiones extremas, en el punto más profundo del océano.",
+    intro: "Son moléculas pequeñas que estabilizan la estructura de las proteínas, facilitando su correcto plegamiento — y algunas de las más notables provienen de organismos que viven bajo presiones extremas en las profundidades oceánicas.",
     oceano: {
-      texto: "Las chaperonas de la fauna hadal presentan una diferencia significativa respecto a otros organismos: la presencia de TMAO (óxido de trimetilamina), un soluto que estabiliza las proteínas de manera extraordinaria. Evita que el agua a alta presión compacte las proteínas y ayuda a que recuperen su forma funcional — una adaptación evolutiva para contrarrestar presiones de hasta 1000+ atmósferas.",
-      imagen: "", imagenAlt: ""
+      texto: "Las chaperonas de la fauna hadal presentan una diferencia significativa respecto a otros organismos: la presencia de TMAO (óxido de trimetilamina), un soluto que estabiliza las proteínas incluso bajo presiones de 1000+ atmósferas. Estos organismos han evolucionado mecanismos moleculares para mantener la integridad proteica en condiciones extremas.",
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Deep_sea_anglerfish.jpg/800px-Deep_sea_anglerfish.jpg",
+      imagenAlt: "Organismos de la fauna hadal adaptados a presiones extremas"
     },
     cerebro: {
-      texto: "En el cerebro humano ya existen chaperonas de forma natural. Las chaperonas generales actúan de manera inespecífica, mientras que las específicas estabilizan las proteínas lo suficiente para \"engañar\" al sistema de control del retículo endoplasmático (RE) y permitir que sean transportadas a su destino final, como la membrana plasmática.",
-      imagen: "", imagenAlt: ""
+      texto: "En el cerebro humano ya existen chaperonas de forma natural. Las chaperonas generales actúan de manera inespecífica, mientras que las específicas estabilizan las proteínas lo suficiente como para evitar su agregación. Sin embargo, en enfermedades como Alzheimer y Parkinson, estas chaperonas naturales no logran compensar el mal plegamiento acelerado.",
+      imagen: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Protein_structure.jpg/1024px-Protein_structure.jpg",
+      imagenAlt: "Estructura de chaperonas moleculares en el cerebro humano"
     },
-    tmao: "TMAO — óxido de trimetilamina: el soluto que le permite a la fauna hadal mantener sus proteínas plegadas correctamente incluso bajo presión extrema, y el punto de partida de la pregunta de este proyecto.",
-    pregunta: "El concepto es que si el TMAO y otras chaperonas de organismos hadales pueden mantener proteínas estables bajo presión extrema, podrían potencialmente inspirar tratamientos para estabilizar proteínas mal plegadas en el cerebro humano — la conexión que este proyecto buscó poner a prueba."
+    tmao: "TMAO — óxido de trimetilamina: el soluto que le permite a la fauna hadal mantener sus proteínas plegadas correctamente incluso bajo presión extrema, y el punto de partida de la pregunta: ¿podría ayudar a proteger neuronas en el cerebro humano?",
+    pregunta: "El concepto es que si el TMAO y otras chaperonas de organismos hadales pueden mantener proteínas estables bajo presión extrema, podrían potencialmente inspirar tratamientos para prevenir o revertir el daño neuronal en enfermedades neurodegenerativas."
   },
 
   resultados: {
     veredicto: "Hipótesis rechazada",
-    resumen: "Basándose en la investigación realizada, no se encontró evidencia suficiente para confirmar que las chaperonas químicas puedan usarse actualmente como tratamiento definitivo para enfermedades neurodegenerativas.",
+    resumen: "Basándose en la investigación realizada, no se encontró evidencia suficiente para confirmar que las chaperonas químicas puedan usarse actualmente como tratamiento definitivo para enfermedades neurodegenerativas. Sin embargo, el concepto abre puertas a investigación futura.",
     razones: [
       "Faltan estudios y datos suficientes: la investigación en este campo es aún incipiente.",
       "Poco interés científico: es un área de investigación emergente pero no prioritaria actualmente.",
       "Alta complejidad experimental: adaptar moléculas de organismos hadales al cerebro humano es extremadamente complejo.",
       "Seguridad desconocida: se desconoce si son seguras o si tienen efectos secundarios en el cerebro humano."
     ],
-    conclusion: "Aunque las chaperonas de la zona hadal podrían potencialmente reparar proteínas mal plegadas y servir de base para terapias contra enfermedades neurodegenerativas, por ahora no existe evidencia científica suficiente para afirmar que inspiren terapias directas para estas enfermedades. La investigación continúa, y este campo representa una línea de investigación prometedora para el futuro de la medicina neurológica.",
+    conclusion: "Aunque las chaperonas de la zona hadal podrían potencialmente reparar proteínas mal plegadas y servir de base para terapias contra enfermedades neurodegenerativas, por ahora no existe suficiente evidencia científica para considerarlas un tratamiento definitivo. La investigación continúa.",
     perspectivas: [
       "Biomimética: aprender de la naturaleza para resolver problemas humanos.",
       "Investigación interdisciplinaria: conectar biología marina con neurociencia.",
