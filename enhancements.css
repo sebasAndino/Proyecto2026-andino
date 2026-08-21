@@ -1,0 +1,216 @@
+/* ========================================
+   enhancements.css
+   Mejoras visuales y de interacción
+   ======================================== */
+
+/* 1. TARJETAS - Hover con sombra mejorada */
+.card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(63, 232, 201, 0.1);
+  border-color: var(--bio-teal);
+}
+
+/* Overlay de color al hover */
+.card .thumb::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--bio-teal);
+  opacity: 0;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.card:hover .thumb::after {
+  opacity: 0.05;
+}
+
+/* Animación de fade-in para imágenes */
+.card .thumb img,
+.reader-figure img,
+.tab-figure {
+  animation: fadeIn 0.4s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* 2. TABS - Mejorados con hover y active state */
+.tab-btn {
+  padding: 12px 16px;
+  border-radius: 6px 6px 0 0;
+  transition: background 0.2s, color 0.2s;
+}
+.tab-btn:hover {
+  background: rgba(63, 232, 201, 0.08);
+  color: var(--ink);
+}
+.tab-btn.active {
+  background: rgba(63, 232, 201, 0.12);
+  color: var(--bio-teal);
+  border-bottom: 3px solid var(--bio-teal);
+}
+
+/* 3. BOTÓN DE ATRÁS - Mejorado */
+.back-btn {
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+.back-btn:hover {
+  background: rgba(63, 232, 201, 0.1);
+  color: var(--bio-teal);
+  padding-left: 16px;
+}
+
+/* 4. WIDGET DE PROFUNDIDAD - Interactivo */
+.depth-widget {
+  transition: transform 0.3s ease;
+}
+.depth-widget:hover {
+  transform: scale(1.02);
+}
+
+.depth-widget .fill {
+  box-shadow: 0 0 8px rgba(63, 232, 201, 0.5);
+}
+
+/* 5. FOCUS VISIBLE - Mejorado para accesibilidad */
+.nav-item:focus-visible,
+.card:focus-visible,
+.back-btn:focus-visible,
+.related-row:focus-visible,
+.tab-btn:focus-visible {
+  outline: 2px solid var(--bio-teal);
+  outline-offset: 3px;
+}
+
+/* 6. SIDEBAR SCRIM - Con backdrop blur y animación */
+.sidebar-scrim {
+  backdrop-filter: blur(2px);
+  animation: fadeInScrim 0.2s ease;
+}
+
+@keyframes fadeInScrim {
+  from { opacity: 0; }
+  to { opacity: 0.5; }
+}
+
+/* 7. BOTONES DE RELACIÓN - Hover mejorado */
+.related-row {
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  padding: 10px 8px;
+}
+.related-row:hover {
+  background: rgba(63, 232, 201, 0.06);
+}
+.related-row:hover span {
+  color: var(--bio-teal);
+}
+
+/* 8. CHIPS DE FUENTES - Efecto hover mejorado */
+.source-chip {
+  transition: all 0.2s ease;
+}
+.source-chip:hover {
+  border-color: var(--bio-teal);
+  background: rgba(63, 232, 201, 0.06);
+  transform: translateX(4px);
+}
+
+/* 9. CAJA DE INFORMACIÓN - Más sutil pero presente */
+.box {
+  transition: all 0.2s ease;
+}
+.box:hover {
+  border-color: var(--bio-teal);
+  background: rgba(63, 232, 201, 0.05);
+}
+
+/* 10. LISTA - Filas con hover */
+.list-row {
+  transition: background 0.2s ease;
+  border-radius: 4px;
+}
+.list-row:hover {
+  background: rgba(63, 232, 201, 0.04);
+}
+
+/* 11. BÚSQUEDA - Input con focus mejorado */
+.search-box input:focus {
+  outline: none;
+}
+.search-box:focus-within {
+  border-color: var(--bio-teal);
+  box-shadow: 0 0 12px rgba(63, 232, 201, 0.15);
+}
+
+/* 12. TRANSICIONES SUAVES EN GENERAL */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 13. IMAGEN READER - Efecto sutil */
+.reader-figure {
+  transition: transform 0.3s ease;
+}
+.reader-figure:hover {
+  transform: scale(1.01);
+}
+
+/* 14. PILL (VEREDICTO) - Hover interactivo */
+.pill {
+  transition: all 0.2s ease;
+  cursor: default;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+.pill:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* 15. ANIMACIÓN DE ENTRADA DE CONTENIDO */
+#view-root {
+  animation: slideInContent 0.3s ease-out;
+}
+
+@keyframes slideInContent {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 16. MEJORA DE CONTRASTE - Ink-faint más legible */
+:root {
+  --ink-faint: #8a99a3;
+}
+
+/* 17. RESPONSIVE - Ajustes para mobile */
+@media (max-width: 640px) {
+  .card {
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+  }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(63, 232, 201, 0.08);
+  }
+  
+  .tab-btn {
+    padding: 10px 12px;
+    font-size: 10px;
+  }
+  
+  .back-btn {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
+}
