@@ -1,0 +1,27 @@
+:root{
+  /* superficies */
+  --abyss-0:#050b12;
+  --abyss-1:#0a141f;
+  --abyss-2:#101f2e;
+  --depth-line:rgba(255,255,255,0.08);
+
+  /* texto */
+  --ink:#e9f1f3;
+  --ink-dim:#a7b7c1;
+  --ink-faint:#6c7c88;
+
+  /* acentos */
+  --bio-teal:#3fe8c9;
+  --bio-teal-dim:rgba(63,232,201,0.35);
+  --neural-violet:#b39dff;
+
+  /* color por enfermedad */
+  --alz:#ff6b6b;
+  --park:#ffa94d;
+  --ela:#4dabf7;
+
+  /* tipografías */
+  --serif:'Fraunces', Georgia, serif;
+  --mono:'Space Mono', 'Courier New', monospace;
+  --sans:'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}

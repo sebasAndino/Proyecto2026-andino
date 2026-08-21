@@ -1,0 +1,138 @@
+.app{
+  display:flex;
+  min-height:100vh;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar{
+  width:250px;
+  flex-shrink:0;
+  background:var(--abyss-1);
+  border-right:1px solid var(--depth-line);
+  padding:22px 16px;
+  display:flex;
+  flex-direction:column;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:4px 8px 26px;
+}
+.brand .mark{
+  width:34px; height:34px; border-radius:9px;
+  background:linear-gradient(155deg, var(--bio-teal), var(--neural-violet));
+  color:var(--abyss-0);
+  font-family:var(--serif); font-weight:700; font-size:1.1rem;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.brand .txt{ display:flex; flex-direction:column; line-height:1.3; }
+.brand .txt strong{ font-family:var(--serif); font-size:1.02rem; color:var(--ink); }
+.brand .txt span{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); }
+
+.nav-list{ list-style:none; padding:0; display:flex; flex-direction:column; gap:2px; }
+.nav-item{
+  display:flex; align-items:center; gap:12px;
+  padding:10px 12px; border-radius:8px;
+  color:var(--ink-dim); text-decoration:none;
+  font-size:.92rem;
+  transition:background .15s ease, color .15s ease;
+}
+.nav-item .ic{
+  width:18px; text-align:center; color:var(--ink-faint);
+  font-size:.95rem; flex-shrink:0;
+}
+.nav-item:hover{ background:rgba(255,255,255,0.04); color:var(--ink); }
+.nav-item.is-active{ background:rgba(63,232,201,0.08); color:var(--bio-teal); }
+.nav-item.is-active .ic{ color:var(--bio-teal); }
+.nav-item .badge{
+  margin-left:auto; font-family:var(--mono); font-size:10px;
+  background:var(--abyss-2); color:var(--ink-faint);
+  padding:1px 7px; border-radius:100px;
+}
+.nav-item.is-active .badge{ background:rgba(63,232,201,0.15); color:var(--bio-teal); }
+
+.sidebar-divider{ height:1px; background:var(--depth-line); margin:18px 4px; }
+
+.sidebar-footer{ margin-top:auto; padding:4px 8px; }
+.depth-widget .label{
+  display:flex; justify-content:space-between;
+  font-family:var(--mono); font-size:10px; letter-spacing:.06em;
+  text-transform:uppercase; color:var(--ink-faint); margin-bottom:6px;
+}
+.depth-widget .value{
+  font-family:var(--mono); font-size:1.3rem; color:var(--bio-teal); margin-bottom:8px;
+}
+.depth-widget .bar{
+  height:4px; border-radius:100px; background:var(--abyss-2); overflow:hidden;
+}
+.depth-widget .fill{
+  height:100%; background:linear-gradient(90deg, var(--bio-teal), var(--neural-violet));
+  transition:width .5s ease;
+}
+
+/* ---------- Contenido principal ---------- */
+.app-main{ flex:1; min-width:0; display:flex; flex-direction:column; }
+
+.topbar{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; gap:16px;
+  padding:14px 32px;
+  background:rgba(5,11,18,0.85);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--depth-line);
+}
+.hamburger{
+  display:none;
+  background:none; border:none; color:var(--ink);
+  font-size:1.2rem; line-height:1;
+}
+.search-box{
+  display:flex; align-items:center; gap:8px;
+  background:var(--abyss-1); border:1px solid var(--depth-line);
+  border-radius:8px; padding:8px 12px;
+  width:100%; max-width:360px;
+}
+.search-box .ic{ color:var(--ink-faint); font-size:.9rem; }
+.search-box input{
+  background:none; border:none; outline:none; color:var(--ink);
+  font-family:var(--sans); font-size:.88rem; width:100%;
+}
+.search-box input::placeholder{ color:var(--ink-faint); }
+.topbar-meta{
+  margin-left:auto; font-family:var(--mono); font-size:11px;
+  color:var(--ink-faint); white-space:nowrap;
+}
+
+#view-root{
+  padding:40px 44px 80px;
+  max-width:920px;
+  width:100%;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width:880px){
+  .sidebar{
+    position:fixed; left:0; top:0; z-index:20;
+    transform:translateX(-100%);
+    transition:transform .22s ease;
+    box-shadow:0 0 40px rgba(0,0,0,0.5);
+  }
+  .sidebar.is-open{ transform:translateX(0); }
+  .hamburger{ display:block; }
+  .topbar{ padding:14px 20px; }
+  #view-root{ padding:28px 20px 60px; }
+  .topbar-meta{ display:none; }
+}
+
+.sidebar-scrim{
+  display:none;
+  position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:15;
+}
+.sidebar-scrim.is-open{ display:block; }
