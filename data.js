@@ -46,8 +46,8 @@ const DATA = {
       proteina: "Beta-amiloide, tau",
       funcion: "Memoria y cognición",
       colorVar: "--alz",
-      imagen: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=500&h=500&fit=crop",
-      imagenAlt: "Representación científica del Alzheimer en el cerebro"
+      imagen: "https://raw.githubusercontent.com/sebasAndino/Proyecto2026-andino/main/Poster%20Feria%20Cient%C3%ADfica%20_20260821_104003_0000.png",
+      imagenAlt: "Póster científico sobre Alzheimer - Proyecto Hadal"
     },
     {
       id: "parkinson",
@@ -58,8 +58,8 @@ const DATA = {
       proteina: "Alfa-sinucleína (Cuerpos de Lewy)",
       funcion: "Movimiento y coordinación",
       colorVar: "--park",
-      imagen: "https://images.unsplash.com/photo-1631217314831-c02b47c0015d?w=500&h=500&fit=crop",
-      imagenAlt: "Síntomas de la enfermedad de Parkinson"
+      imagen: "https://raw.githubusercontent.com/sebasAndino/Proyecto2026-andino/main/Poster%20Feria%20Cient%C3%ADfica%20_20260821_103954_0000.png",
+      imagenAlt: "Póster científico sobre Parkinson - Proyecto Hadal"
     },
     {
       id: "ela",
@@ -70,8 +70,8 @@ const DATA = {
       proteina: "SOD1, TDP-43",
       funcion: "Movimiento voluntario",
       colorVar: "--ela",
-      imagen: "https://images.unsplash.com/photo-1576091160650-112884142f8f?w=500&h=500&fit=crop",
-      imagenAlt: "Neurona motora afectada por ELA"
+      imagen: "https://raw.githubusercontent.com/sebasAndino/Proyecto2026-andino/main/Poster%20Feria%20Cient%C3%ADfica%20_20260821_103947_0000.png",
+      imagenAlt: "Póster científico sobre ELA - Proyecto Hadal"
     }
   ],
 
@@ -79,13 +79,13 @@ const DATA = {
     intro: "Son moléculas pequeñas que estabilizan la estructura de las proteínas, facilitando su correcto plegamiento — y algunas de las más notables provienen de organismos que viven bajo presiones extremas en las profundidades oceánicas.",
     oceano: {
       texto: "Las chaperonas de la fauna hadal presentan una diferencia significativa respecto a otros organismos: la presencia de TMAO (óxido de trimetilamina), un soluto que estabiliza las proteínas incluso bajo presiones de 1000+ atmósferas. Estos organismos han evolucionado mecanismos moleculares para mantener la integridad proteica en condiciones extremas.",
-      imagen: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&h=500&fit=crop",
-      imagenAlt: "Organismos de la fauna hadal en las profundidades oceánicas"
+      imagen: "https://raw.githubusercontent.com/sebasAndino/Proyecto2026-andino/main/Poster%20Feria%20Cient%C3%ADfica%20_20260821_103937_0000.png",
+      imagenAlt: "Póster sobre Chaperonas - Proyecto Hadal"
     },
     cerebro: {
       texto: "En el cerebro humano ya existen chaperonas de forma natural. Las chaperonas generales actúan de manera inespecífica, mientras que las específicas estabilizan las proteínas lo suficiente como para evitar su agregación. Sin embargo, en enfermedades como Alzheimer y Parkinson, estas chaperonas naturales no logran compensar el mal plegamiento acelerado.",
-      imagen: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=500&h=500&fit=crop",
-      imagenAlt: "Estructura de chaperonas moleculares en el cerebro humano"
+      imagen: "https://raw.githubusercontent.com/sebasAndino/Proyecto2026-andino/main/Poster%20Feria%20Cient%C3%ADfica%20_20260821_103937_0000.png",
+      imagenAlt: "Póster sobre Chaperonas - Proyecto Hadal"
     },
     tmao: "TMAO — óxido de trimetilamina: el soluto que le permite a la fauna hadal mantener sus proteínas plegadas correctamente incluso bajo presión extrema, y el punto de partida de la pregunta: ¿podría ayudar a proteger neuronas en el cerebro humano?",
     pregunta: "El concepto es que si el TMAO y otras chaperonas de organismos hadales pueden mantener proteínas estables bajo presión extrema, podrían potencialmente inspirar tratamientos para prevenir o revertir el daño neuronal en enfermedades neurodegenerativas."
